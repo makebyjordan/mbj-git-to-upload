@@ -1,0 +1,86 @@
+[
+    {
+        "title": "IA y Modelos",
+        "icon": "https://iili.io/flYpFs9.jpg",
+        "items": [
+            {
+                "label": "Gemini",
+                "icon": "https://favicon.im/gemini.google.com?larger=true",
+                "link": "https://gemini.google.com/app"
+            },
+            {
+                "label": "Claude",
+                "icon": "https://favicon.im/claude.ai?larger=true&t=1770598758800",
+                "link": "https://claude.ai/"
+            },
+            {
+                "label": "ChatGPT",
+                "icon": "https://favicon.im/CHATGPT.com?larger=true&t=1770598672147",
+                "link": "https://chatgpt.com/"
+            }
+        ]
+    },
+    {
+        "title": "Desarrollo Full-Stack",
+        "icon": "https://iili.io/faqHKHN.png",
+        "items": [
+            {
+                "label": "React & Next.js",
+                "icon": "https://iili.io/faqHKHN.png",
+                "link": ""
+            },
+            {
+                "label": "Node.js & Python",
+                "icon": "https://iili.io/faqHKHN.png",
+                "link": ""
+            },
+            {
+                "label": "FastAPI & Django",
+                "icon": "https://iili.io/faqHKHN.png",
+                "link": ""
+            }
+        ]
+    },
+    {
+        "title": "Infra y Datos",
+        "icon": "https://iili.io/faqHKHN.png",
+        "items": [
+            {
+                "label": "AWS & Google Cloud",
+                "icon": "https://iili.io/faqHKHN.png",
+                "link": ""
+            },
+            {
+                "label": "Docker & Kubernetes",
+                "icon": "https://iili.io/faqHKHN.png",
+                "link": ""
+            },
+            {
+                "label": "MongoDB & PostgreSQL",
+                "icon": "https://iili.io/faqHKHN.png",
+                "link": ""
+            }
+        ]
+    },
+    {
+        "title": "Automatización y DevOps",
+        "icon": "https://iili.io/faqHKHN.png",
+        "items": [
+            {
+                "label": "Zapier & n8n",
+                "icon": "https://iili.io/faqHKHN.png",
+                "link": ""
+            },
+            {
+                "label": "Git & CI/CD",
+                "icon": "https://iili.io/faqHKHN.png",
+                "link": ""
+            },
+            {
+                "label": "Windsurf & Antigravity",
+                "icon": "https://iili.io/faqHKHN.png",
+                "link": ""
+            }
+        ]
+    }
+]
