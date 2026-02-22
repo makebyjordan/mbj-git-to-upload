@@ -32,10 +32,10 @@
           ]
         },
         {
-          "title": "SegundoDropdown",
+          "title": "Clases y Guías",
           "children": [
-            { "name": "Item 1", "url": "#", "description": "Descripción 1" },
-            { "name": "Item 2", "url": "#", "description": "Descripción 2" }
+            { "name": "Clases", "url": "#", "description": "Descripción 1" },
+            { "name": "Guías", "url": "#", "description": "Descripción 2" }
           ]
         }
       ]
