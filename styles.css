@@ -207,42 +207,63 @@ img {
 .nav-dropdown-toggle {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
+    padding: 6px 0;
 }
 
 .nav-dropdown-toggle::after {
     content: '▼';
-    font-size: 10px;
+    font-size: 9px;
     opacity: 0.7;
+    transform-origin: center;
+    transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
 .nav-dropdown-menu {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 6px);
     right: 0;
     left: auto;
     min-width: 260px;
     max-width: min(92vw, 340px);
     list-style: none;
-    margin-top: 8px;
     padding: 8px;
     border-radius: 12px;
     border: 1px solid var(--border-glass);
-    background: rgba(10, 9, 24, 0.97);
-    backdrop-filter: blur(15px);
-    box-shadow: 0 24px 44px rgba(0, 0, 0, 0.35);
+    background: linear-gradient(180deg, rgba(14, 13, 30, 0.97), rgba(9, 10, 22, 0.98));
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow:
+        0 24px 44px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.02) inset;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.25s ease;
+    pointer-events: none;
+    transform: translateY(-8px) scale(0.985);
+    transform-origin: top right;
+    transition:
+        opacity 0.22s ease,
+        visibility 0.22s ease,
+        transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
     z-index: 1000;
 }
 
 .nav-dropdown:hover > .nav-dropdown-menu,
-.has-children:hover > .nav-dropdown-menu {
+.nav-dropdown:focus-within > .nav-dropdown-menu,
+.has-children:hover > .nav-dropdown-menu,
+.has-children:focus-within > .nav-dropdown-menu {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+}
+
+.nav-dropdown:hover > .nav-dropdown-toggle::after,
+.nav-dropdown:focus-within > .nav-dropdown-toggle::after,
+.has-children:hover > .submenu-trigger::after,
+.has-children:focus-within > .submenu-trigger::after {
+    opacity: 1;
+    transform: rotate(180deg);
 }
 
 .nav-dropdown-menu li {
@@ -251,42 +272,62 @@ img {
 }
 
 .nav-dropdown-menu .nav-dropdown-menu {
-    top: 100%;
-    left: 0;
+    top: -6px;
+    left: calc(100% + 6px);
     right: auto;
-    margin-top: 28px;
-    margin-right: 28px;
+    margin: 0;
+    transform: translateX(-8px) scale(0.985);
+    transform-origin: top left;
 }
 
 .nav-dropdown-menu a,
 .submenu-trigger {
-    display: block;
-    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
     border-radius: 10px;
     color: var(--text-primary);
     font-size: 14px;
     text-decoration: none;
-    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease,
+        transform 0.18s ease,
+        color 0.18s ease;
     cursor: pointer;
 }
 
 .nav-dropdown-menu a:hover,
+.nav-dropdown-menu a:focus-visible,
 .submenu-trigger:hover {
-    background: rgba(255, 255, 255, 0.06);
-    padding-left: 18px;
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.06);
+    transform: translateX(3px);
+}
+
+.submenu-trigger:focus-visible {
+    outline: none;
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.08);
 }
 
 .has-children > .submenu-trigger::after {
-    content: '▼'; /* en vez de › */
-    float: right;
-    font-size: 10px;
-    line-height: 18px;
+    content: '›';
+    font-size: 14px;
+    line-height: 1;
+    opacity: 0.65;
+    transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 .nav-item-content {
     display: flex;
     flex-direction: column;
     gap: 3px;
+    min-width: 0;
 }
 
 .nav-item-title {
@@ -295,6 +336,7 @@ img {
     gap: 6px;
     font-weight: 600;
     line-height: 1.2;
+    min-width: 0;
 }
 
 .nav-item-desc {
@@ -400,44 +442,81 @@ img {
 
 .mobile-links .mobile-dropdown-toggle {
     background: transparent;
-    border: 0;
+    border: 1px solid transparent;
     cursor: pointer;
     text-align: left;
-    padding: 0;
+    padding: 10px 12px;
     width: 100%;
     color: var(--text-secondary);
     font-family: var(--font-display);
-    font-size: 2rem;
+    font-size: 1.25rem;
     font-weight: 600;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    transition: background-color 0.22s ease, border-color 0.22s ease, color 0.22s ease;
+}
+
+.mobile-links .mobile-dropdown-toggle::after {
+    content: '▼';
+    font-size: 11px;
+    opacity: 0.7;
+    transition: transform 0.22s ease, opacity 0.22s ease;
 }
 
 .mobile-links .mobile-dropdown-toggle:hover {
     color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.06);
 }
 
 .mobile-dropdown-menu {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.35s ease;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition:
+        max-height 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.22s ease,
+        transform 0.22s ease;
     background: rgba(255, 255, 255, 0.02);
+    border-radius: 10px;
 }
 
 .mobile-dropdown.active > .mobile-dropdown-menu,
 .mobile-has-children.active > .mobile-dropdown-menu {
     max-height: 2000px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.mobile-dropdown.active > .mobile-dropdown-toggle::after,
+.mobile-has-children.active > .mobile-dropdown-toggle::after {
+    transform: rotate(180deg);
+    opacity: 1;
 }
 
 .mobile-sub-wrapper {
-    padding-left: 15px;
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    margin-left: 8px;
+    padding-left: 12px;
+    border-left: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .mobile-dropdown-menu a,
 .mobile-dropdown-menu .mobile-dropdown-toggle {
     display: block;
-    padding: 8px 0;
+    padding: 10px 12px;
     text-align: left;
     font-size: 1rem;
+    border-radius: 10px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.mobile-dropdown-menu a:hover,
+.mobile-dropdown-menu .mobile-dropdown-toggle:hover {
+    background: rgba(255, 255, 255, 0.04);
 }
 
 /* --- Buttons --- */
