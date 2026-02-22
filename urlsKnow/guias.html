@@ -83,6 +83,36 @@
       width: 100%;
     }
 
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar select,
+    .toolbar a {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font: inherit;
+      padding: 10px 12px;
+      background: rgba(18, 26, 46, 0.76);
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .toolbar select {
+      min-width: 240px;
+      cursor: pointer;
+    }
+
+    .toolbar a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     .card {
       background: rgba(18, 26, 46, 0.76);
       border: 1px solid var(--line);
@@ -182,6 +212,10 @@
     </aside>
 
     <main class="content">
+      <div class="toolbar">
+        <select id="guide-select" aria-label="Seleccionar guia"></select>
+        <a id="open-guide-tab" href="#" target="_blank" rel="noopener">Abrir en otra pestaña</a>
+      </div>
       <article class="card" id="guide-view">
         <div class="state">Cargando guias...</div>
       </article>
@@ -208,6 +242,26 @@
         out = out.replace(/\*([^*]+)\*/g, '<em>$1</em>');
         out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
         return out;
+      }
+
+      function slugify(value) {
+        return String(value || '')
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '')
+          .slice(0, 80) || 'guia';
+      }
+
+      function findInitialIndex(guides) {
+        const params = new URLSearchParams(window.location.search);
+        const guideParam = params.get('guide');
+        if (!guideParam) return 0;
+        const index = guides.findIndex(function (g) {
+          return (g.slug || slugify(g.title)) === guideParam;
+        });
+        return index >= 0 ? index : 0;
       }
 
       function markdownToHtml(markdown) {
@@ -307,6 +361,7 @@
         const view = document.getElementById('guide-view');
         const title = escapeHtml(item.title || 'Sin titulo');
         const description = escapeHtml(item.description || '');
+        const slug = item.slug || slugify(item.title);
         const image = item.image ? '<img class="hero-image" src="' + escapeHtml(item.image) + '" alt="' + title + '">' : '';
         const body = markdownToHtml(item.body || '');
 
@@ -317,35 +372,59 @@
             '<p class="description">' + description + '</p>' +
             '<div class="md">' + body + '</div>' +
           '</div>';
+
+        const openGuideTab = document.getElementById('open-guide-tab');
+        openGuideTab.href = 'guias.html?guide=' + encodeURIComponent(slug);
       }
 
       function renderList(guides) {
         const list = document.getElementById('guide-list');
         const view = document.getElementById('guide-view');
+        const select = document.getElementById('guide-select');
 
         if (!Array.isArray(guides) || guides.length === 0) {
           list.innerHTML = '';
+          select.innerHTML = '';
           view.innerHTML = '<div class="state">No hay guias en <code>guias.json</code>.</div>';
           return;
         }
 
+        const initialIndex = findInitialIndex(guides);
+
         list.innerHTML = guides.map(function (item, index) {
-          return '<button class="guide-btn' + (index === 0 ? ' active' : '') + '" data-index="' + index + '">' +
+          return '<button class="guide-btn' + (index === initialIndex ? ' active' : '') + '" data-index="' + index + '">' +
             escapeHtml(item.title || 'Sin titulo') +
           '</button>';
         }).join('');
 
-        renderGuide(guides[0]);
+        select.innerHTML = guides.map(function (item, index) {
+          const selected = index === initialIndex ? ' selected' : '';
+          return '<option value="' + index + '"' + selected + '>' + escapeHtml(item.title || 'Sin titulo') + '</option>';
+        }).join('');
+
+        function setActive(index) {
+          const safeIndex = Number(index) || 0;
+          list.querySelectorAll('.guide-btn').forEach(function (x, i) {
+            x.classList.toggle('active', i === safeIndex);
+          });
+          select.value = String(safeIndex);
+          const current = guides[safeIndex] || guides[0];
+          renderGuide(current);
+          const slug = current.slug || slugify(current.title);
+          const nextUrl = 'guias.html?guide=' + encodeURIComponent(slug);
+          window.history.replaceState({}, '', nextUrl);
+        }
+
+        setActive(initialIndex);
 
         list.querySelectorAll('.guide-btn').forEach(function (btn) {
           btn.addEventListener('click', function () {
-            list.querySelectorAll('.guide-btn').forEach(function (x) {
-              x.classList.remove('active');
-            });
-            btn.classList.add('active');
-            const index = Number(btn.dataset.index || 0);
-            renderGuide(guides[index] || guides[0]);
+            setActive(Number(btn.dataset.index || 0));
           });
+        });
+
+        select.addEventListener('change', function () {
+          setActive(Number(select.value || 0));
         });
       }
 
