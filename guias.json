@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Guia rapida de contenido para tu web",
+    "description": "Como estructurar un articulo claro, util y facil de mantener en JSON.",
+    "image": "https://iili.io/faqHKHN.png",
+    "body": "# Objetivo\n\nEsta guia te ayuda a escribir contenido util para tu web.\n\n## Estructura recomendada\n\n- Problema real del lector\n- Solucion concreta\n- Pasos accionables\n- Cierre con siguiente accion\n\n## Buenas practicas\n\n1. Titulos cortos y claros.\n2. Parrafos de 2 a 4 lineas.\n3. Ejemplos reales.\n4. Evitar relleno.\n\n### Ejemplo de CTA\n\n[Contactar por WhatsApp](https://wa.me/34600000000)\n"
+  },
+  {
+    "title": "Checklist para publicar una nueva pagina",
+    "description": "Revision final antes de subir cambios a GitHub y publicar en VPS.",
+    "image": "https://iili.io/fafdMeS.png",
+    "body": "# Antes de publicar\n\n## Contenido\n\n- Revisar ortografia.\n- Validar enlaces.\n- Comprobar imagen principal.\n\n## Tecnico\n\n- Probar en movil y escritorio.\n- Confirmar que el JSON es valido.\n- Verificar que el deploy automatico esta en verde.\n\n```bash\ngit add .\ngit commit -m \"update content\"\ngit push origin main\n```\n"
+  },
+  {
+    "title": "Guia de formato Markdown para articulos",
+    "description": "Sintaxis basica para crear articulos que se vean bien en la pagina de guias.",
+    "image": "https://iili.io/faKqXN2.png",
+    "body": "# Titulos\n\nUsa `#` para H1, `##` para H2 y `###` para H3.\n\n## Texto\n\nPuedes usar **negrita**, *cursiva* y `codigo inline`.\n\n## Listas\n\n- Item uno\n- Item dos\n- Item tres\n\n## Enlaces\n\n[Ir al blog](../blog.html)\n"
+  }
+]

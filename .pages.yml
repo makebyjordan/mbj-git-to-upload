@@ -26,3 +26,9 @@ content:
     type: file
     path: navbar-links.json
     format: json
+
+  - name: guias
+    label: Guias
+    type: file
+    path: guias.json
+    format: json

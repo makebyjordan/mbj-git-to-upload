@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guias - MakeByJordan</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121a2e;
+      --line: rgba(255, 255, 255, 0.12);
+      --text: #eef2ff;
+      --muted: rgba(238, 242, 255, 0.72);
+      --accent: #38bdf8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top right, #1a2c54 0%, var(--bg) 55%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--line);
+      background: rgba(10, 16, 32, 0.8);
+      backdrop-filter: blur(8px);
+      padding: 22px 16px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar h2 {
+      margin: 0 0 14px;
+      font-size: 1.1rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .guide-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .guide-btn {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text);
+      text-align: left;
+      padding: 11px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font: inherit;
+      transition: all 0.2s ease;
+    }
+
+    .guide-btn:hover {
+      border-color: rgba(56, 189, 248, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .guide-btn.active {
+      border-color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+    }
+
+    .content {
+      padding: 28px 24px 56px;
+      max-width: 980px;
+      width: 100%;
+    }
+
+    .card {
+      background: rgba(18, 26, 46, 0.76);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .hero-image {
+      width: 100%;
+      max-width: 900px;
+      height: auto;
+      display: block;
+      border-bottom: 1px solid var(--line);
+      background: #0f172a;
+    }
+
+    .article {
+      padding: 24px;
+      line-height: 1.75;
+      color: var(--text);
+    }
+
+    .article h1 {
+      margin: 0 0 12px;
+      line-height: 1.2;
+      font-size: clamp(1.7rem, 3.2vw, 2.4rem);
+    }
+
+    .description {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 1.04rem;
+    }
+
+    .md h1, .md h2, .md h3 {
+      line-height: 1.25;
+      margin: 1.4em 0 0.55em;
+    }
+
+    .md p { margin: 0.85em 0; }
+    .md ul, .md ol { padding-left: 1.2em; }
+    .md li { margin: 0.35em 0; }
+
+    .md code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0.1em 0.38em;
+      font-size: 0.95em;
+    }
+
+    .md pre {
+      background: #0a1122;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      overflow: auto;
+    }
+
+    .md pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 0.94em;
+    }
+
+    .md a {
+      color: #7dd3fc;
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(125, 211, 252, 0.45);
+    }
+
+    .state {
+      padding: 26px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar {
+        height: auto;
+        position: static;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+      }
+      .content { padding: 20px 14px 28px; }
+      .article { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <h2>Guias</h2>
+      <div id="guide-list" class="guide-list"></div>
+    </aside>
+
+    <main class="content">
+      <article class="card" id="guide-view">
+        <div class="state">Cargando guias...</div>
+      </article>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      function escapeHtml(value) {
+        return String(value || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function renderInline(text) {
+        let out = escapeHtml(text);
+        out = out.replace(/`([^`]+)`/g, '<code>$1</code>');
+        out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+        out = out.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+        out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+        return out;
+      }
+
+      function markdownToHtml(markdown) {
+        const src = String(markdown || '').replace(/\r\n/g, '\n');
+        const lines = src.split('\n');
+        const html = [];
+        let inUl = false;
+        let inOl = false;
+        let inCode = false;
+        let codeBuffer = [];
+
+        function closeLists() {
+          if (inUl) {
+            html.push('</ul>');
+            inUl = false;
+          }
+          if (inOl) {
+            html.push('</ol>');
+            inOl = false;
+          }
+        }
+
+        for (const line of lines) {
+          if (line.startsWith('```')) {
+            closeLists();
+            if (!inCode) {
+              inCode = true;
+              codeBuffer = [];
+            } else {
+              html.push('<pre><code>' + escapeHtml(codeBuffer.join('\n')) + '</code></pre>');
+              inCode = false;
+              codeBuffer = [];
+            }
+            continue;
+          }
+
+          if (inCode) {
+            codeBuffer.push(line);
+            continue;
+          }
+
+          if (!line.trim()) {
+            closeLists();
+            continue;
+          }
+
+          const h = line.match(/^(#{1,3})\s+(.+)$/);
+          if (h) {
+            closeLists();
+            const level = h[1].length;
+            html.push('<h' + level + '>' + renderInline(h[2]) + '</h' + level + '>');
+            continue;
+          }
+
+          const ul = line.match(/^\s*-\s+(.+)$/);
+          if (ul) {
+            if (inOl) {
+              html.push('</ol>');
+              inOl = false;
+            }
+            if (!inUl) {
+              html.push('<ul>');
+              inUl = true;
+            }
+            html.push('<li>' + renderInline(ul[1]) + '</li>');
+            continue;
+          }
+
+          const ol = line.match(/^\s*\d+\.\s+(.+)$/);
+          if (ol) {
+            if (inUl) {
+              html.push('</ul>');
+              inUl = false;
+            }
+            if (!inOl) {
+              html.push('<ol>');
+              inOl = true;
+            }
+            html.push('<li>' + renderInline(ol[1]) + '</li>');
+            continue;
+          }
+
+          closeLists();
+          html.push('<p>' + renderInline(line) + '</p>');
+        }
+
+        closeLists();
+
+        if (inCode) {
+          html.push('<pre><code>' + escapeHtml(codeBuffer.join('\n')) + '</code></pre>');
+        }
+
+        return html.join('');
+      }
+
+      function renderGuide(item) {
+        const view = document.getElementById('guide-view');
+        const title = escapeHtml(item.title || 'Sin titulo');
+        const description = escapeHtml(item.description || '');
+        const image = item.image ? '<img class="hero-image" src="' + escapeHtml(item.image) + '" alt="' + title + '">' : '';
+        const body = markdownToHtml(item.body || '');
+
+        view.innerHTML = '' +
+          image +
+          '<div class="article">' +
+            '<h1>' + title + '</h1>' +
+            '<p class="description">' + description + '</p>' +
+            '<div class="md">' + body + '</div>' +
+          '</div>';
+      }
+
+      function renderList(guides) {
+        const list = document.getElementById('guide-list');
+        const view = document.getElementById('guide-view');
+
+        if (!Array.isArray(guides) || guides.length === 0) {
+          list.innerHTML = '';
+          view.innerHTML = '<div class="state">No hay guias en <code>guias.json</code>.</div>';
+          return;
+        }
+
+        list.innerHTML = guides.map(function (item, index) {
+          return '<button class="guide-btn' + (index === 0 ? ' active' : '') + '" data-index="' + index + '">' +
+            escapeHtml(item.title || 'Sin titulo') +
+          '</button>';
+        }).join('');
+
+        renderGuide(guides[0]);
+
+        list.querySelectorAll('.guide-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            list.querySelectorAll('.guide-btn').forEach(function (x) {
+              x.classList.remove('active');
+            });
+            btn.classList.add('active');
+            const index = Number(btn.dataset.index || 0);
+            renderGuide(guides[index] || guides[0]);
+          });
+        });
+      }
+
+      fetch('../guias.json', { cache: 'no-store' })
+        .then(function (res) {
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return res.json();
+        })
+        .then(renderList)
+        .catch(function (err) {
+          const view = document.getElementById('guide-view');
+          view.innerHTML = '<div class="state">No se pudo cargar <code>guias.json</code>: ' + escapeHtml(err.message) + '</div>';
+        });
+    })();
+  </script>
+</body>
+</html>
