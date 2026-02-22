@@ -6,12 +6,13 @@
 (function () {
     'use strict';
 
-    const API_BASE = '/api';
     const STORAGE_KEY = 'mbj_blog_posts';
     const JSON_STORAGE_PREFIX = 'mbj_json_';
-    const ADMIN_PASS = 'makebyjordan2026';
-    const AUTH_KEY = 'mbj_admin_auth';
-    const API_TOKEN_KEY = 'mbj_api_token';
+    const JSON_FILES = {
+        posts: 'posts.json',
+        tech: 'tech.json',
+        projects: 'projects.json'
+    };
 
     function esc(value) {
         const s = String(value ?? '');
@@ -31,7 +32,7 @@
     }
 
     // ==========================================
-    // DATABASE — API + local cache fallback
+    // DATABASE — static JSON + local cache fallback
     // ==========================================
     class BlogDB {
         constructor() {
@@ -40,20 +41,22 @@
         }
 
         async load() {
-            // Only load blog data on blog page or admin page
-            if (!window.location.pathname.includes('blog.html') && !window.location.pathname.includes('admin.html')) {
+            const page = document.body?.dataset?.page;
+            if (!['blog', 'post', 'admin'].includes(page)) {
                 return [];
             }
             
-            // Primary source: API
+            // Primary source: local JSON file
             try {
-                const response = await fetch(`${API_BASE}/posts`);
+                const response = await fetch(JSON_FILES.posts, { cache: 'no-store' });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 this.posts = await response.json();
+                if (!Array.isArray(this.posts)) throw new Error('Invalid posts payload');
                 this.save();
                 this.loaded = true;
                 return this.posts;
             } catch (e) {
-                console.error('Error loading /api/posts:', e);
+                console.error('Error loading posts.json:', e);
             }
 
             // Fallback: localStorage cache
@@ -430,68 +433,15 @@
         }
 
         isAuthenticated() {
-            return localStorage.getItem(AUTH_KEY) === 'true' && !!localStorage.getItem(API_TOKEN_KEY);
-        }
-
-        login(password, apiToken) {
-            if (password === ADMIN_PASS) {
-                localStorage.setItem(AUTH_KEY, 'true');
-                localStorage.setItem(API_TOKEN_KEY, apiToken);
-                return true;
-            }
-            return false;
+            return true;
         }
 
         logout() {
-            localStorage.removeItem(AUTH_KEY);
-            localStorage.removeItem(API_TOKEN_KEY);
             window.location.reload();
         }
 
-        getApiToken() {
-            return localStorage.getItem(API_TOKEN_KEY) || '';
-        }
-
-        async apiFetch(path, options = {}) {
-            const token = this.getApiToken();
-            const headers = {
-                'Content-Type': 'application/json',
-                ...(options.headers || {})
-            };
-
-            if (token) {
-                headers.Authorization = `Bearer ${token}`;
-            }
-
-            const response = await fetch(path, {
-                ...options,
-                headers
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(errorText || `HTTP ${response.status}`);
-            }
-
-            return response;
-        }
-
         initLogin() {
-            const loginForm = document.getElementById('login-form');
-            const loginError = document.getElementById('login-error');
-            if (!loginForm) return;
-
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const pass = document.getElementById('login-password').value;
-                const token = document.getElementById('login-api-token').value.trim();
-                if (this.login(pass, token)) {
-                    window.location.reload();
-                } else {
-                    loginError.classList.add('show');
-                    setTimeout(() => loginError.classList.remove('show'), 3000);
-                }
-            });
+            // Static mode: no login needed.
         }
 
         initDashboard() {
@@ -534,9 +484,9 @@
 
         getJsonConfig(id) {
             const map = {
-                posts: { publicApi: `${API_BASE}/posts`, adminApi: `${API_BASE}/admin/posts`, storageKey: STORAGE_KEY, label: 'posts.json' },
-                tech: { publicApi: `${API_BASE}/tech`, adminApi: `${API_BASE}/admin/tech`, storageKey: `${JSON_STORAGE_PREFIX}tech`, label: 'tech.json' },
-                projects: { publicApi: `${API_BASE}/projects`, adminApi: `${API_BASE}/admin/projects`, storageKey: `${JSON_STORAGE_PREFIX}projects`, label: 'projects.json' }
+                posts: { publicFile: JSON_FILES.posts, storageKey: STORAGE_KEY, label: 'posts.json' },
+                tech: { publicFile: JSON_FILES.tech, storageKey: `${JSON_STORAGE_PREFIX}tech`, label: 'tech.json' },
+                projects: { publicFile: JSON_FILES.projects, storageKey: `${JSON_STORAGE_PREFIX}projects`, label: 'projects.json' }
             };
             return map[id] || map.posts;
         }
@@ -553,7 +503,8 @@
             const loadCurrent = async () => {
                 const cfg = this.getJsonConfig(select.value);
                 try {
-                    const res = await fetch(cfg.publicApi);
+                    const res = await fetch(cfg.publicFile, { cache: 'no-store' });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
                     const data = await res.json();
                     editor.value = JSON.stringify(data, null, 4);
                 } catch (e) {
@@ -576,16 +527,6 @@
                         return;
                     }
 
-                    try {
-                        await this.apiFetch(cfg.adminApi, {
-                            method: 'PUT',
-                            body: JSON.stringify(parsed)
-                        });
-                    } catch (e) {
-                        alert(`No se pudo guardar en API: ${e.message}`);
-                        return;
-                    }
-
                     localStorage.setItem(cfg.storageKey, JSON.stringify(parsed, null, 4));
 
                     // If editing posts.json, sync with blog DB
@@ -594,7 +535,7 @@
                         this.renderPosts();
                     }
 
-                    alert('Guardado en API.');
+                    alert('Guardado en el navegador. Descarga el JSON y reemplaza el archivo en el proyecto.');
                 });
             }
 
@@ -730,33 +671,16 @@
                 this.db.create(data);
             }
 
-            try {
-                await this.apiFetch(`${API_BASE}/admin/posts`, {
-                    method: 'PUT',
-                    body: JSON.stringify(this.db.getAll())
-                });
-            } catch (e) {
-                alert(`No se pudo guardar en API: ${e.message}`);
-                return;
-            }
-
             this.closeModal();
             this.renderPosts();
+            alert('Cambios guardados localmente. Descarga posts.json desde la pestaña JSON.');
         }
 
         async deletePost(id) {
             if (confirm('¿Estás seguro de que quieres eliminar este artículo?')) {
                 this.db.delete(id);
-                try {
-                    await this.apiFetch(`${API_BASE}/admin/posts`, {
-                        method: 'PUT',
-                        body: JSON.stringify(this.db.getAll())
-                    });
-                } catch (e) {
-                    alert(`No se pudo eliminar en API: ${e.message}`);
-                    return;
-                }
                 this.renderPosts();
+                alert('Cambios guardados localmente. Descarga posts.json desde la pestaña JSON.');
             }
         }
     }
@@ -789,16 +713,9 @@
             const admin = new AdminPanel(db);
             // Expose globally for inline onclick handlers
             window.blogAdmin = admin;
-
-            if (admin.isAuthenticated()) {
-                document.getElementById('admin-login')?.remove();
-                document.getElementById('admin-dashboard').style.display = 'block';
-                admin.initDashboard();
-            } else {
-                document.getElementById('admin-login').style.display = 'flex';
-                document.getElementById('admin-dashboard').style.display = 'none';
-                admin.initLogin();
-            }
+            document.getElementById('admin-login')?.remove();
+            document.getElementById('admin-dashboard').style.display = 'block';
+            admin.initDashboard();
         }
 
         // Navbar interactions for blog/post/admin pages

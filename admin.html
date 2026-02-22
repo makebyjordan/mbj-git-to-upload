@@ -57,25 +57,8 @@
         </ul>
     </div>
 
-    <!-- Login View -->
-    <section id="admin-login" class="admin-login">
-        <div class="login-card">
-            <h2>Panel del Blog</h2>
-            <p>Introduce la contraseña para gestionar los artículos.</p>
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="login-password">Contraseña</label>
-                    <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
-                </div>
-                <div id="login-error" class="login-error">Contraseña incorrecta.</div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Entrar</button>
-            </form>
-            <p style="margin-top: 24px; font-size: 0.8rem; color: var(--text-muted);">Este panel utiliza almacenamiento local para guardar los cambios.</p>
-        </div>
-    </section>
-
     <!-- Dashboard -->
-    <section id="admin-dashboard" class="admin-dashboard" style="display: none;">
+    <section id="admin-dashboard" class="admin-dashboard">
         <div class="container">
             <div class="admin-header">
                 <div>
@@ -119,7 +102,7 @@
                     <label for="json-editor">Contenido JSON</label>
                     <textarea id="json-editor" class="form-textarea" placeholder="Aquí se cargará el JSON..."></textarea>
                 </div>
-                <p class="admin-json-note">Los cambios se guardan en el navegador (localStorage). Para publicarlos en el servidor, descarga el JSON y súbelo.</p>
+                <p class="admin-json-note">Los cambios se guardan en el navegador (localStorage). Para publicarlos, descarga el JSON y reemplaza el archivo en este proyecto.</p>
             </div>
         </div>
     </section>
