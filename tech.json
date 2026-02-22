@@ -21,27 +21,6 @@
         ]
     },
     {
-        "title": "Desarrollo Full-Stack",
-        "icon": "https://iili.io/faqHKHN.png",
-        "items": [
-            {
-                "label": "React & Next.js",
-                "icon": "https://iili.io/faqHKHN.png",
-                "link": ""
-            },
-            {
-                "label": "Node.js & Python",
-                "icon": "https://iili.io/faqHKHN.png",
-                "link": ""
-            },
-            {
-                "label": "FastAPI & Django",
-                "icon": "https://iili.io/faqHKHN.png",
-                "link": ""
-            }
-        ]
-    },
-    {
         "title": "Infra y Datos",
         "icon": "https://iili.io/faqHKHN.png",
         "items": [
@@ -67,6 +46,27 @@
         "icon": "https://iili.io/faqHKHN.png",
         "items": [
             {
+                "label": "n8n",
+                "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8b13FupbJiqRDcYQbK4BfEcAJ6S7eA8I5oQ&s",
+                "link": "https://n8n.io/"
+            },
+            {
+                "label": "Github",
+                "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5WvGtZ1S5jzu1fW_xkXQIsve_F601toeQ7g&s",
+                "link": "https://github.com/"
+            },
+            {
+                "label": "Windsurf IDE",
+                "icon": "https://img.icons8.com/fluent/1200/windsurf-editor.jpg",
+                "link": "https://windsurf.com/"
+            }
+        ]
+    },
+    {
+        "title": "Automatización y DevOps",
+        "icon": "https://iili.io/faqHKHN.png",
+        "items": [
+            {
                 "label": "Zapier & n8n",
                 "icon": "https://iili.io/faqHKHN.png",
                 "link": ""
@@ -80,6 +80,32 @@
                 "label": "Windsurf & Antigravity",
                 "icon": "https://iili.io/faqHKHN.png",
                 "link": ""
+            }
+        ]
+    },
+    {
+        "title": "Extensiones chrome",
+        "icon": "https://iili.io/faqHKHN.png",
+        "items": [
+            {
+                "label": "NotebookLM Tools",
+                "icon": "https://lh3.googleusercontent.com/GRxyuaK9zVLRUIadKiJnmLlY5OhpVAncTPhwXZjjgkvb4RM2LImX5oHzsix6g1RvVaVSfXPM0J4hlLNStFaO6Z_FSRw=s120",
+                "link": "https://chromewebstore.google.com/detail/notebooklm-tools/hiibkpjljigehlnnecbgehkhfibmahjn?hl=es"
+            },
+            {
+                "label": "NotebookLM Ultra Exporter: Markdown & PDF & More",
+                "icon": "https://lh3.googleusercontent.com/yIipHQjwM3UTRNUHkQQMBd1X0bIqmrxbidNyewLsx59wq-jkaG2fMa0YqOhV7sWN8y9XGCXhVnKgqVPA_BdVKCaAdA=s120",
+                "link": "https://chromewebstore.google.com/detail/notebooklm-ultra-exporter/afchokljnhhggkhedfbmkcmdagjmjchj?hl=es"
+            },
+            {
+                "label": "Captura de página completa - FireShot",
+                "icon": "https://lh3.googleusercontent.com/H6VcwetaNraR4b3yrUvu_601L0otxCtlLpR0woT3815_6z-QsxGJVbBY9TWiadOYdeY3BOAYH-r22flXK3wZln-CCA=s120",
+                "link": "https://chromewebstore.google.com/detail/captura-de-p%C3%A1gina-complet/mcbpblocgmgfnpjjppndjkmgjaogfceg?hl=es"
+            },
+            {
+                "label": "YouTube to NotebookLM",
+                "icon": "https://lh3.googleusercontent.com/2vjgHkC8QxpxfHEB79t5Uj1m-mA_FDg0IzeAjlinhXCRThsZ_xZEOFvNpJOZyDcIFngtegZk8XS58g9OHjOOb_pwokQ=s120",
+                "link": "https://chromewebstore.google.com/detail/youtube-to-notebooklm/kobncfkmjelbefaoohoblamnbackjggk?hl=es"
             }
         ]
     }
