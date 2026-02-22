@@ -363,10 +363,13 @@
             const titleEl = document.getElementById('post-title');
             if (titleEl) titleEl.textContent = post.title;
 
-            // Render content
+            // Render content — allows img tags
             const contentEl = document.getElementById('post-content');
             if (contentEl) {
-                contentEl.innerHTML = sanitizeHtml(post.content);
+                contentEl.innerHTML = DOMPurify.sanitize(post.content, {
+                    ADD_TAGS: ['img'],
+                    ADD_ATTR: ['src', 'width', 'style', 'alt']
+                });
 
                 // Add tags
                 if (post.tags && post.tags.length > 0) {
