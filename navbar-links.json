@@ -28,8 +28,14 @@
                 { "name": "IA Avanzada", "url": "urlsKnow/ia-avanzada.html", "description": "Deep Learning", "newTab": true },
                 { "name": "backNetCode", "url": "urlsKnow/show-back.html", "description": "Guías", "newTab": true }
               ]
-            },
-            
+            }
+          ]
+        },
+        {
+          "title": "SegundoDropdown",
+          "children": [
+            { "name": "Item 1", "url": "#", "description": "Descripción 1" },
+            { "name": "Item 2", "url": "#", "description": "Descripción 2" }
           ]
         }
       ]
