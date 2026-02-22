@@ -92,6 +92,60 @@
                 e.preventDefault();
             });
         });
+
+        const desktopItems = document.querySelectorAll('.nav-dropdown, .has-children');
+
+        desktopItems.forEach((item) => {
+            let closeTimer = null;
+
+            item.addEventListener('mouseenter', () => {
+                if (closeTimer) {
+                    clearTimeout(closeTimer);
+                    closeTimer = null;
+                }
+                item.classList.add('hover-open');
+                requestAnimationFrame(positionSubmenu);
+            });
+
+            item.addEventListener('mouseleave', () => {
+                closeTimer = setTimeout(() => {
+                    item.classList.remove('hover-open');
+                }, 180);
+            });
+        });
+
+        window.addEventListener('resize', positionSubmenu);
+        window.addEventListener('scroll', positionSubmenu, { passive: true });
+        requestAnimationFrame(positionSubmenu);
+    }
+
+    function positionSubmenu() {
+        const nestedItems = document.querySelectorAll('.nav-dropdown-menu li.has-children');
+        const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+
+        nestedItems.forEach((item) => {
+            item.classList.remove('open-left');
+            const menu = item.querySelector(':scope > .nav-dropdown-menu');
+            if (!menu) return;
+
+            const itemRect = item.getBoundingClientRect();
+            const estimatedWidth = Math.min(Math.max(menu.offsetWidth || 280, 240), 340);
+            const rightOverflow = itemRect.right + estimatedWidth - viewportWidth + 16;
+
+            if (rightOverflow > 0) {
+                item.classList.add('open-left');
+            }
+
+            const menuRect = menu.getBoundingClientRect();
+            const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+            const bottomOverflow = menuRect.bottom - viewportHeight + 12;
+            if (bottomOverflow > 0) {
+                const topShift = Math.min(bottomOverflow, Math.max(menuRect.top - 70, 0));
+                menu.style.top = `${-6 - topShift}px`;
+            } else {
+                menu.style.top = '-6px';
+            }
+        });
     }
 
     async function loadNavbarLinks() {
