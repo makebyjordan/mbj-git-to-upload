@@ -1,0 +1,28 @@
+media:
+  input: media
+  output: /media
+
+content:
+  - name: posts
+    label: Posts
+    type: file
+    path: posts.json
+    format: json
+
+  - name: projects
+    label: Projects
+    type: file
+    path: projects.json
+    format: json
+
+  - name: tech
+    label: Tech
+    type: file
+    path: tech.json
+    format: json
+
+  - name: navbar
+    label: Navbar Links
+    type: file
+    path: navbar-links.json
+    format: json
