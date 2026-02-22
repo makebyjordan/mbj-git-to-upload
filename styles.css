@@ -251,11 +251,11 @@ img {
 }
 
 .nav-dropdown-menu .nav-dropdown-menu {
-    top: 0;
-    right: 100%;
-    left: auto;
-    margin-top: -8px;
-    margin-right: 2px;
+    top: 100%;
+    left: 0;
+    right: auto;
+    margin-top: 6px;
+    margin-right: 0px;
 }
 
 .nav-dropdown-menu a,
@@ -277,10 +277,10 @@ img {
 }
 
 .has-children > .submenu-trigger::after {
-    content: '›';
+    content: '▼'; /* en vez de › */
     float: right;
-    font-size: 18px;
-    line-height: 14px;
+    font-size: 10px;
+    line-height: 18px;
 }
 
 .nav-item-content {
