@@ -40,6 +40,11 @@
         }
 
         async load() {
+            // Only load blog data on blog page or admin page
+            if (!window.location.pathname.includes('blog.html') && !window.location.pathname.includes('admin.html')) {
+                return [];
+            }
+            
             // Primary source: API
             try {
                 const response = await fetch(`${API_BASE}/posts`);
@@ -762,9 +767,13 @@
     const db = new BlogDB();
 
     document.addEventListener('DOMContentLoaded', async () => {
-        await db.load();
-
+        // Only initialize blog system on blog, post, or admin pages
         const page = document.body.dataset.page;
+        if (!page || !['blog', 'post', 'admin'].includes(page)) {
+            return;
+        }
+        
+        await db.load();
 
         if (page === 'blog') {
             const renderer = new BlogRenderer(db);

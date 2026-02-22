@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Load</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #000; color: #fff; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #333; }
+        .project { margin: 10px 0; padding: 10px; background: #222; }
+        .tech-category { margin: 10px 0; padding: 10px; background: #222; }
+    </style>
+</head>
+<body>
+    <h1>Test Data Loading</h1>
+    
+    <div class="test-section">
+        <h2>Projects</h2>
+        <div id="projects-container"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Tech</h2>
+        <div id="tech-container"></div>
+    </div>
+
+    <script>
+        // Test loading projects
+        fetch('projects.json')
+            .then(response => response.json())
+            .then(projects => {
+                console.log('Projects loaded:', projects.length);
+                const container = document.getElementById('projects-container');
+                container.innerHTML = projects.map(p => `
+                    <div class="project">
+                        <h3>${p.title}</h3>
+                        <p>${p.description}</p>
+                        <small>${p.category}</small>
+                    </div>
+                `).join('');
+            })
+            .catch(error => console.error('Projects error:', error));
+
+        // Test loading tech
+        fetch('tech.json')
+            .then(response => response.json())
+            .then(techData => {
+                console.log('Tech loaded:', techData.length);
+                const container = document.getElementById('tech-container');
+                container.innerHTML = techData.map(cat => `
+                    <div class="tech-category">
+                        <h3>${cat.title}</h3>
+                        <div>${cat.items.map(item => `<span>${item.label}</span>`).join(', ')}</div>
+                    </div>
+                `).join('');
+            })
+            .catch(error => console.error('Tech error:', error));
+    </script>
+</body>
+</html>

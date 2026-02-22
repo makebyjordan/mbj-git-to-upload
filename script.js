@@ -488,6 +488,118 @@
     }
 
     // ==========================================
+    // PROJECTS LOADER
+    // ==========================================
+    class ProjectsLoader {
+        constructor() {
+            this.projectsGrid = document.getElementById('projects-grid');
+            this.init();
+        }
+
+        async init() {
+            if (!this.projectsGrid) return;
+            
+            try {
+                const response = await fetch('projects.json');
+                if (!response.ok) return;
+                const projects = await response.json();
+                this.renderProjects(projects);
+            } catch (error) {
+                console.error('Error loading projects:', error);
+            }
+        }
+
+        renderProjects(projects) {
+            const projectsHTML = projects.map(project => {
+                const sizeClass = project.size === 'large' ? 'project-large' : '';
+                
+                return `<div class="project-card ${sizeClass}" data-animate="fade-up">
+                    <div class="project-visual">
+                        <div class="project-gradient" style="--g1: ${project.gradient ? project.gradient[0] : '#7c3aed'}; --g2: ${project.gradient ? project.gradient[1] : '#2563eb'}"></div>
+                        <img src="${project.image}" alt="${project.title}" class="project-image" loading="lazy">
+                        <div class="project-shape">
+                            <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+                                <rect x="10" y="10" width="100" height="100" rx="20" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                                <rect x="20" y="20" width="80" height="80" rx="15" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <span class="project-category">${project.category}</span>
+                        <h3>${project.title}</h3>
+                        <p>${project.description}</p>
+                        <div class="project-tags">
+                            ${project.technologies.map(tech => `<span>${tech}</span>`).join('')}
+                        </div>
+                        ${project.link !== '#' ? 
+                            `<a href="${project.link}" class="project-link" target="_blank">Ver Proyecto →</a>` : 
+                            `<span class="project-link project-link-disabled">Próximamente</span>`
+                        }
+                    </div>
+                </div>`;
+            }).join('');
+            
+            this.projectsGrid.innerHTML = projectsHTML;
+            
+            // Make projects visible immediately (skip scroll animation)
+            this.projectsGrid.querySelectorAll('[data-animate]').forEach(el => {
+                el.classList.add('visible');
+            });
+        }
+    }
+
+    // ==========================================
+    // TECH LOADER
+    // ==========================================
+    class TechLoader {
+        constructor() {
+            this.techGrid = document.getElementById('tech-grid');
+            this.init();
+        }
+
+        async init() {
+            if (!this.techGrid) return;
+            
+            try {
+                const response = await fetch('tech.json');
+                if (!response.ok) return;
+                const techData = await response.json();
+                this.renderTech(techData);
+            } catch (error) {
+                console.error('Error loading tech data:', error);
+            }
+        }
+
+        renderTech(techData) {
+            const techHTML = techData.map(category => {
+                return `<div class="tech-category" data-animate="fade-up">
+                    <div class="tech-category-title">
+                        <img src="${category.icon}" alt="${category.title}" class="tech-title-icon">
+                        ${category.title}
+                    </div>
+                    <div class="tech-items">
+                        ${category.items.map(item => `
+                            <a href="${item.link}" class="tech-item ${item.link ? '' : 'tech-item-link'}" ${item.link ? 'target="_blank"' : ''}>
+                                <div class="tech-item-icon">
+                                    <img src="${item.icon}" alt="${item.label}">
+                                </div>
+                                <span>${item.label}</span>
+                            </a>
+                        `).join('')}
+                    </div>
+                </div>`;
+            }).join('');
+            
+            this.techGrid.innerHTML = techHTML;
+            
+            // Make tech items visible immediately (skip scroll animation)
+            this.techGrid.querySelectorAll('[data-animate]').forEach(el => {
+                el.classList.add('visible');
+            });
+        }
+    }
+
+    // ==========================================
     // INITIALIZE EVERYTHING
     // ==========================================
     document.addEventListener('DOMContentLoaded', () => {
@@ -513,6 +625,10 @@
         new SmoothScroll();
         new ParallaxEffect();
         new ActiveNavUpdater();
+        
+        // Data Loaders
+        new ProjectsLoader();
+        new TechLoader();
 
         // Preloader fade
         document.body.style.opacity = '0';

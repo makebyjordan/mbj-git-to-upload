@@ -19,7 +19,7 @@
         return [];
     }
 
-    function generateHTML(items, isMobile) {
+    function generateHTML(items, isMobile, parentClass = '') {
         return items.map((item) => {
             const children = getChildren(item);
             const hasChildren = children.length > 0;
@@ -29,16 +29,33 @@
                 : '';
 
             if (hasChildren) {
-                return (
-                    '<li class="' + (isMobile ? 'mobile-has-children' : 'has-children') + '">' +
-                        '<span class="' + (isMobile ? 'mobile-dropdown-toggle' : 'submenu-trigger') + '" role="button" tabindex="0">' +
-                            label +
-                        '</span>' +
-                        '<ul class="' + (isMobile ? 'mobile-dropdown-menu mobile-sub-wrapper' : 'nav-dropdown-menu') + '">' +
-                            generateHTML(children, isMobile) +
-                        '</ul>' +
-                    '</li>'
-                );
+                const liClass = isMobile ? 'mobile-has-children' : 'has-children';
+                const toggleClass = isMobile ? 'mobile-dropdown-toggle' : 'submenu-trigger';
+                const menuClass = isMobile ? 'mobile-dropdown-menu mobile-sub-wrapper' : 'nav-dropdown-menu';
+                
+                if (isMobile) {
+                    return (
+                        '<li class="' + liClass + '">' +
+                            '<button class="' + toggleClass + '" type="button">' +
+                                label +
+                            '</button>' +
+                            '<ul class="' + menuClass + '">' +
+                                generateHTML(children, isMobile, liClass) +
+                            '</ul>' +
+                        '</li>'
+                    );
+                } else {
+                    return (
+                        '<li class="' + liClass + '">' +
+                            '<a href="#" class="' + toggleClass + '">' +
+                                label +
+                            '</a>' +
+                            '<ul class="' + menuClass + '">' +
+                                generateHTML(children, isMobile, liClass) +
+                            '</ul>' +
+                        '</li>'
+                    );
+                }
             }
 
             const safeUrl = escapeHTML(item.url || '#');
@@ -70,7 +87,7 @@
     }
 
     function initDesktopDropdowns() {
-        document.querySelectorAll('.nav-dropdown-toggle').forEach((link) => {
+        document.querySelectorAll('.submenu-trigger').forEach((link) => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
             });
@@ -84,14 +101,27 @@
 
         try {
             const response = await fetch('navbar-links.json');
-            if (!response.ok) return;
+            if (!response.ok) {
+                console.error('Failed to load navbar links:', response.status);
+                return;
+            }
             const data = await response.json();
-            const rootData = getChildren(data && data.navbar && data.navbar.knowLG);
+            
+            // Get the knowLG data from the nested structure
+            const knowLGData = data?.navbar?.knowLG;
+            const rootData = knowLGData ? getChildren(knowLGData) : [];
+
+            if (rootData.length === 0) {
+                console.warn('No navbar links found in JSON data');
+                return;
+            }
 
             desktopRoot.innerHTML = generateHTML(rootData, false);
             mobileRoot.innerHTML = generateHTML(rootData, true);
             initDesktopDropdowns();
             initMobileDropdowns();
+            
+            console.log('Navbar links loaded successfully:', rootData.length, 'items');
         } catch (error) {
             console.error('Navbar links error:', error);
         }
