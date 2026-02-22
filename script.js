@@ -497,21 +497,33 @@
         }
 
         async init() {
-            if (!this.projectsGrid) return;
+            if (!this.projectsGrid) {
+                console.error('Projects grid not found');
+                return;
+            }
             
             try {
                 const response = await fetch('projects.json');
-                if (!response.ok) return;
+                if (!response.ok) {
+                    console.error('Failed to load projects:', response.status);
+                    return;
+                }
                 const projects = await response.json();
                 this.renderProjects(projects);
+                console.log('Projects loaded successfully:', projects.length, 'items');
             } catch (error) {
                 console.error('Error loading projects:', error);
             }
         }
 
         renderProjects(projects) {
+            console.log('renderProjects called with:', projects.length, 'projects');
+            console.log('projectsGrid element:', this.projectsGrid);
+            
             const projectsHTML = projects.map(project => {
                 const sizeClass = project.size === 'large' ? 'project-large' : '';
+                
+                console.log('Rendering project:', project.title);
                 
                 return `<div class="project-card ${sizeClass}" data-animate="fade-up">
                     <div class="project-visual">
@@ -539,12 +551,29 @@
                 </div>`;
             }).join('');
             
+            console.log('Setting innerHTML with', projectsHTML.length, 'characters');
             this.projectsGrid.innerHTML = projectsHTML;
             
             // Make projects visible immediately (skip scroll animation)
-            this.projectsGrid.querySelectorAll('[data-animate]').forEach(el => {
+            const projectElements = this.projectsGrid.querySelectorAll('[data-animate]');
+            console.log('Found project elements:', projectElements.length);
+            
+            projectElements.forEach((el, index) => {
                 el.classList.add('visible');
+                console.log('Added .visible to project element', index);
+                
+                // Monitor if class gets removed
+                const observer = new MutationObserver((mutations) => {
+                    mutations.forEach((mutation) => {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                            console.log('Project element class changed:', el.className);
+                        }
+                    });
+                });
+                observer.observe(el, { attributes: true });
             });
+            
+            console.log('innerHTML set successfully');
         }
     }
 
@@ -558,20 +587,32 @@
         }
 
         async init() {
-            if (!this.techGrid) return;
+            if (!this.techGrid) {
+                console.error('Tech grid not found');
+                return;
+            }
             
             try {
                 const response = await fetch('tech.json');
-                if (!response.ok) return;
+                if (!response.ok) {
+                    console.error('Failed to load tech data:', response.status);
+                    return;
+                }
                 const techData = await response.json();
                 this.renderTech(techData);
+                console.log('Tech data loaded successfully:', techData.length, 'categories');
             } catch (error) {
                 console.error('Error loading tech data:', error);
             }
         }
 
         renderTech(techData) {
+            console.log('renderTech called with:', techData.length, 'categories');
+            console.log('techGrid element:', this.techGrid);
+            
             const techHTML = techData.map(category => {
+                console.log('Rendering category:', category.title);
+                
                 return `<div class="tech-category" data-animate="fade-up">
                     <div class="tech-category-title">
                         <img src="${category.icon}" alt="${category.title}" class="tech-title-icon">
@@ -590,12 +631,15 @@
                 </div>`;
             }).join('');
             
+            console.log('Setting tech innerHTML with', techHTML.length, 'characters');
             this.techGrid.innerHTML = techHTML;
             
             // Make tech items visible immediately (skip scroll animation)
             this.techGrid.querySelectorAll('[data-animate]').forEach(el => {
                 el.classList.add('visible');
             });
+            
+            console.log('Tech innerHTML set successfully');
         }
     }
 
