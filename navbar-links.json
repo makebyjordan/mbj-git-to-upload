@@ -34,8 +34,16 @@
         {
           "title": "Clases y Guías",
           "children": [
-            { "name": "Clases", "url": "#", "description": "Descripción 1" },
-            { "name": "Guías", "url": "#", "description": "Descripción 2" }
+            { "title": "Clases", 
+              "children": [
+                { "name": "IA Avanzada", "url": "urlsKnow/ia-avanzada.html", "description": "Deep Learning", "newTab": true },
+                { "name": "backNetCode", "url": "urlsKnow/show-back.html", "description": "Guías", "newTab": true }
+              ]},
+            { "title": "Guías", 
+              "children": [
+                { "name": "IA Avanzada", "url": "urlsKnow/ia-avanzada.html", "description": "Deep Learning", "newTab": true },
+                { "name": "backNetCode", "url": "urlsKnow/show-back.html", "description": "Guías", "newTab": true }
+              ]}
           ]
         }
       ]
