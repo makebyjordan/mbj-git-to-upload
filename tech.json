@@ -63,13 +63,13 @@
         ]
     },
     {
-        "title": "Proximamente",
+        "title": "Para rapidos Workflows",
         "icon": "https://iili.io/faqHKHN.png",
         "items": [
             {
-                "label": "Opcion 1",
-                "icon": "https://iili.io/faqHKHN.png",
-                "link": ""
+                "label": "pagesCms",
+                "icon": "https://pbs.twimg.com/profile_images/1755172350272933888/8ScwGnqn_400x400.jpg",
+                "link": "https://pagescms.org/"
             },
             {
                 "label": "Opcion 2",
