@@ -63,21 +63,21 @@
         ]
     },
     {
-        "title": "Automatización y DevOps",
+        "title": "Proximamente",
         "icon": "https://iili.io/faqHKHN.png",
         "items": [
             {
-                "label": "Zapier & n8n",
+                "label": "Opcion 1",
                 "icon": "https://iili.io/faqHKHN.png",
                 "link": ""
             },
             {
-                "label": "Git & CI/CD",
+                "label": "Opcion 2",
                 "icon": "https://iili.io/faqHKHN.png",
                 "link": ""
             },
             {
-                "label": "Windsurf & Antigravity",
+                "label": "Opcion 3",
                 "icon": "https://iili.io/faqHKHN.png",
                 "link": ""
             }
