@@ -25,8 +25,8 @@
             {
               "title": "Especializaciones",
               "children": [
-                { "name": "IA Avanzada", "url": "urlsKnow/ia-avanzada.html", "description": "Deep Learning", "newTab": true },
-                { "name": "backNetCode", "url": "urlsKnow/show-back.html", "description": "Guías", "newTab": true }
+                { "name": "proximamente", "url": "#", "description": "Deep Learning", "newTab": true },
+                { "name": "proximamente", "url": "#", "description": "Guías", "newTab": true }
               ]
             }
           ]
@@ -36,13 +36,13 @@
           "children": [
             { "title": "Clases", 
               "children": [
-                { "name": "IA Avanzada", "url": "urlsKnow/ia-avanzada.html", "description": "Deep Learning", "newTab": true },
-                { "name": "backNetCode", "url": "urlsKnow/show-back.html", "description": "Guías", "newTab": true }
+                { "name": "proximamente", "url": "#", "description": "Deep Learning", "newTab": true },
+                { "name": "proximamente", "url": "#", "description": "Guías", "newTab": true }
               ]},
             { "title": "Guías", 
               "children": [
-                { "name": "IA Avanzada", "url": "urlsKnow/ia-avanzada.html", "description": "Deep Learning", "newTab": true },
-                { "name": "backNetCode", "url": "urlsKnow/show-back.html", "description": "Guías", "newTab": true }
+                { "name": "todas", "url": "urlsKnow/guias.html", "newTab": true },
+                { "name": "proximamente", "url": "#", "newTab": true }
               ]}
           ]
         }
