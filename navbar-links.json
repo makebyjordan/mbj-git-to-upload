@@ -28,6 +28,32 @@
                 { "name": "IA Avanzada", "url": "urlsKnow/ia-avanzada.html", "description": "Deep Learning", "newTab": true },
                 { "name": "backNetCode", "url": "urlsKnow/show-back.html", "description": "Guías", "newTab": true }
               ]
+            },
+            {
+          "title": "digNet",
+          "children": [
+            {
+              "name": "Instagram",
+              "url": "https://www.instagram.com/makebyjordan",
+              "description": "dev-profile"
+            },
+            {
+              "name": "LinkedIn",
+              "url": "https://www.linkedin.com/in/makebyjordan/",
+              "description": "Perfil"
+            },
+            {
+              "name": "X",
+              "url": "https://x.com/makebyjordan",
+              "description": "Sitio oficial",
+              "newTab": true
+            },
+            {
+              "title": "Especializaciones",
+              "children": [
+                { "name": "IA Avanzada", "url": "urlsKnow/ia-avanzada.html", "description": "Deep Learning", "newTab": true },
+                { "name": "backNetCode", "url": "urlsKnow/show-back.html", "description": "Guías", "newTab": true }
+              ]
             }
           ]
         }
